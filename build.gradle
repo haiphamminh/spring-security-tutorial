@@ -1,6 +1,14 @@
 plugins {
     id 'java'
+    id 'maven'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '2.2.0.RELEASE'
 }
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'io.spring.dependency-management'
 
 group 'com.tutorial'
 version '1.0'
@@ -8,9 +16,30 @@ version '1.0'
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'junit:junit'
+}
+
+// ['maven' plugin]: 'gradlew uploadBootArchives'
+uploadBootArchives {
+    repositories {
+        mavenLocal()
+    }
+}
+
+// ['maven-publish' plugin]: 'gradlew publish'
+publishing {
+    publications {
+        bootJava(MavenPublication) {
+            artifact bootJar
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
